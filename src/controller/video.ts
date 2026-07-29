@@ -35,10 +35,4 @@ export default class VideoController {
     return this.videoService.video_detail(id);
   }
 
-  @Get('task')
-  @Public()
-  task() {
-    return this.taskService.video();
-  }
-
 }

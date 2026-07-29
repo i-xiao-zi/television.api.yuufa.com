@@ -29,10 +29,6 @@ export default class Video {
 
   @ApiProperty()
   @Column()
-  class: string;
-
-  @ApiProperty()
-  @Column()
   name: string;
 
   @ApiProperty()
@@ -42,10 +38,6 @@ export default class Video {
   @ApiProperty()
   @Column()
   en: string;
-
-  @ApiProperty()
-  @Column()
-  status: number;
 
   @ApiProperty()
   @Column()

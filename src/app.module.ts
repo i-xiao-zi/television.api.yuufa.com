@@ -5,7 +5,7 @@ import AppController from './controller/app';
 import AppService from './service/app';
 import MysqlModule from "./module/mysql";
 import ResponseModule from "./module/response";
-import AuthController from "./controller/auth";
+import TaskController from "./controller/task";
 import AuthService from "./service/auth";
 import TvController from "./controller/tv";
 import TvService from './service/tv';
@@ -29,7 +29,7 @@ import VideoService from './service/video';
     AppController,
     TvController,
     VideoController,
-    AuthController,
+    TaskController,
   ],
   providers: [
     AppService,
