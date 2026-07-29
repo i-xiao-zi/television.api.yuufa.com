@@ -24,8 +24,9 @@ export default class TaskService {
     private readonly videoLogModelService: VideoLogModelService,
   ) {}
   //    秒 分 时 日 月 周
-  @Cron('0 54 14 * * *', { timeZone: 'Asia/Shanghai' })
+  @Cron('0 0 0 * * *', { timeZone: 'Asia/Shanghai' })
   async video() {
+    this.logger.log(`开始任务`);
     const origin = await this.videoOriginModelService.findActive() as TvVideoOrigin;
     // let url = new URL(`${origin.url}?ac=videolist&pg=1`);
     const hour = dayjs().diff(origin.crawled_at, 'hour')
@@ -33,7 +34,7 @@ export default class TaskService {
     let page = parseInt(url.searchParams.get('pg') || '1');
     let count = 1;
     for (let i = page; i <= count; i++) {
-      console.log(`${i}/${count}`);
+      this.logger.log(`${i}/${count}`);
       url.searchParams.set('pg', i.toString());
       try{
         const response = await fetch(url.toString());
@@ -54,11 +55,10 @@ export default class TaskService {
               this.videoModelService.save({
                 vod_id: item.vod_id,
                 origin_id: origin.id,
-                class: item.type_name || '',
+                type_id: item.type_id,
                 name: item.vod_name,
                 sub: item.vod_sub,
                 en: item.vod_en,
-                status: item.type_id,
                 tags: item.vod_class.replace(/[\s]*\/[\s]*/g, ",").replace(/[\s]+/g, ","),
                 pic: item.vod_pic,
                 actor: item.vod_actor.replace(/[\s]*\/[\s]*/g, ","),
@@ -96,14 +96,7 @@ export default class TaskService {
       }
     }
     await this.videoOriginModelService.crawled();
-    console.log(`完成更新`);
+    this.logger.log('完成更新');
+    return '更新完成';
   }
-  //    秒 分 时 日 月 周
-  // @Cron('0 * * * * *', { timeZone: 'Asia/Shanghai' })
-  //   async log() {
-  //   const logs = await this.tvVideoLogModelService.findError();
-  //   for (const log of logs) {
-  //     await this.fetchVideo(log.url);
-  //   }
-  // }
 }

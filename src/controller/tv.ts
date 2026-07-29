@@ -46,16 +46,5 @@ export default class TvController {
   async dianshi() {
     return this.tvService.dianshi();
   }
-  @Get('video')
-  @Public()
-  async video() {
-    return this.tvService.video();
-  }
-
-  @Get('video/origin')
-  @Public()
-  async videoOrigin() {
-    return this.tvService.videoOrigin();
-  }
 
 }

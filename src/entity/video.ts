@@ -25,6 +25,10 @@ export default class Video {
 
   @ApiProperty()
   @Column()
+  type_id: number;
+
+  @ApiProperty()
+  @Column()
   class: string;
 
   @ApiProperty()

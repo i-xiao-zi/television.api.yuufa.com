@@ -5,11 +5,12 @@ import "multer";
 import {ApiTags} from "@nestjs/swagger";
 import VideoService from '../service/video';
 import { map } from 'rxjs';
+import TaskService from 'src/service/task';
 
 @ApiTags("Video")
 @Controller('video')
 export default class VideoController {
-  constructor(private readonly videoService: VideoService) {}
+  constructor(private readonly videoService: VideoService, private readonly taskService: TaskService) {}
   
   @Get()
   @Public()
@@ -28,28 +29,16 @@ export default class VideoController {
     return this.videoService.origin_active();
   }
 
-  @Get('origin/:origin_id')
-  @Public()
-  origin_detail(@Param("origin_id") origin_id: number) {
-    return this.videoService.origin_detail(origin_id);
-  }
-
-  @Get("video/:id")
+  @Get(":id")
   @Public()
   video_detail(@Param("id") id: number) {
     return this.videoService.video_detail(id);
   }
 
-  @Sse('task')
+  @Get('task')
   @Public()
   task() {
-    return this.videoService.task(1);
+    return this.taskService.video();
   }
 
-  @Sse('fetch/:origin_id')
-  @Public()
-  fetch(@Param("origin_id") origin_id: number) {
-    console.log(origin_id);
-    return this.videoService.fetch(origin_id);
-  }
 }
