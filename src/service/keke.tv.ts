@@ -1,6 +1,5 @@
 import {Injectable} from '@nestjs/common';
 import * as cheerio from "cheerio";
-import YouNongPaiModelService from "./you_nong_pai.model";
 import {instanceToPlain} from "class-transformer";
 import dayjs from "dayjs";
 // import utc from 'dayjs/plugin/utc';

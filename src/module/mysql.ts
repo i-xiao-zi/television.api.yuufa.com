@@ -4,17 +4,7 @@ import User from '../entity/user';
 import {ConfigModule, ConfigService} from "@nestjs/config";
 import fs from "fs";
 import path from "path";
-import SearchorModelService from "../service/searchor.model";
 import UserModelService from '../service/user.model';
-import Searchor from "../entity/searchor";
-import SearchorType from "../entity/searchor_type";
-import SearchorTypeModelService from "../service/searchor_type.model";
-import NoteCategoryModelService from '../service/note_category.model';
-import NoteContentModelService from '../service/note_content.model';
-import NoteCategory from '../entity/note_category';
-import NoteContent from '../entity/note_content';
-import YouNongPai from "../entity/you_nong_pai";
-import YouNongPaiModelService from "../service/you_nong_pai.model";
 import TvChannel from '../entity/tv_channel';
 import TvSchedule from '../entity/tv_schedule';
 import TvChannelModelService from '../service/tv_channel.model';
@@ -55,11 +45,6 @@ import VideoLogModelService from '../service/video_log.model';
     }),
     TypeOrmModule.forFeature([
       User, 
-      Searchor, 
-      SearchorType, 
-      NoteCategory, 
-      NoteContent, 
-      YouNongPai, 
       TvChannel, 
       TvSchedule, 
       VideoOrigin,
@@ -72,11 +57,6 @@ import VideoLogModelService from '../service/video_log.model';
   ],
   providers: [
     UserModelService, 
-    SearchorModelService, 
-    SearchorTypeModelService, 
-    NoteCategoryModelService, 
-    NoteContentModelService, 
-    YouNongPaiModelService, 
     TvChannelModelService, 
     TvScheduleModelService,
     VideoOriginModelService,
@@ -86,11 +66,6 @@ import VideoLogModelService from '../service/video_log.model';
   ],
   exports: [
     UserModelService, 
-    SearchorModelService, 
-    SearchorTypeModelService, 
-    NoteCategoryModelService, 
-    NoteContentModelService, 
-    YouNongPaiModelService, 
     TvChannelModelService, 
     TvScheduleModelService,
     VideoOriginModelService,
