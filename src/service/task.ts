@@ -73,8 +73,6 @@ export default class TaskService {
                 lang: item.vod_lang,
                 year: item.vod_year,
                 author: item.vod_author,
-                level: item.vod_level,
-                duration: parseInt(item.vod_duration).toString(),
                 douban_id: item.vod_douban_id,
                 douban_score: parseInt(item.vod_douban_score) || 0,
                 content: item.vod_content,

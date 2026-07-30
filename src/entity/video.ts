@@ -101,14 +101,6 @@ export default class Video {
 
   @ApiProperty()
   @Column()
-  level: number;
-
-  @ApiProperty()
-  @Column()
-  duration: string;
-
-  @ApiProperty()
-  @Column()
   douban_id: number;
 
   @ApiProperty()

@@ -21,11 +21,13 @@ import VideoService from './service/video';
   imports: [
     ConfigModule.forRoot({isGlobal: true}),
     SupabaseModule.forRootAsync({
+      inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         supabaseUrl: configService.getOrThrow<string>('SUPABASE_URL'),
         supabaseKey: configService.getOrThrow<string>('SUPABASE_KEY'),
       }),
     }),
+    SupabaseModule.injectClient(),
     ScheduleModule.forRoot(),
     MysqlModule,
     ControllerModule,
