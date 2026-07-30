@@ -10,19 +10,19 @@ import TaskService from 'src/service/task';
 export default class VideoController {
   constructor(private readonly videoService: VideoService, private readonly taskService: TaskService) {}
   
-  @Get()
+  @Get('list')
   @Public()
   search(@Query('video_name') video_name?: string, @Query('page') page: number = 1, @Query('size') size: number = 20) {
     return this.videoService.search(video_name, page, size);
   }
 
-  @Get(":id")
+  @Get("detail/:id")
   @Public()
   video_detail(@Param("id") id: number) {
     return this.videoService.video_detail(id);
   }
 
-  @Get('origin')
+  @Get('origin/list')
   @Public()
   origin_list() {
     return this.videoService.origin_list();
