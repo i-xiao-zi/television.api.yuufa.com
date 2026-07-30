@@ -27,10 +27,10 @@ export default class VideoController {
   origin_list() {
     return this.videoService.origin_list();
   }
+
   @Get('origin/active')
   @Public()
   origin_active() {
     return this.videoService.origin_active();
   }
-
 }

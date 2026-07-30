@@ -1,36 +1,24 @@
-import {Injectable, Logger, NotFoundException} from '@nestjs/common';
-import {hash} from "typeorm/util/StringUtils";
-import {ConfigService} from "@nestjs/config";
-import path from "path";
-import UserModelService from "./user.model";
+import {Injectable, Logger} from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
-import VideoOriginModelService from "./video_origin.model";
-import VideoModelService from "./video.model";
-import VideoUrlModelService from "./video_url.model";
-import {VideoList} from "./tv.types";
-import VideoLogModelService from './video_log.model';
-import TvVideoOrigin from 'src/entity/video_origin';
+import { InjectSupabaseClient } from 'nestjs-supabase-js';
+import { SupabaseClient } from '@supabase/supabase-js';
 import dayjs from 'dayjs';
+import { Database } from './supabase';
+import {VideoList} from "./tv.types";
 
 @Injectable()
 export default class TaskService {
   private readonly logger = new Logger(TaskService.name);
-  constructor(
-    private readonly configService: ConfigService,
-    private readonly userModelService: UserModelService,
-    private readonly videoOriginModelService: VideoOriginModelService,
-    private readonly videoModelService: VideoModelService,
-    private readonly videoUrlModelService: VideoUrlModelService,
-    private readonly videoLogModelService: VideoLogModelService,
-  ) {}
+  constructor(@InjectSupabaseClient() private readonly supabase: SupabaseClient<Database>) {}
+  
   //    秒 分 时 日 月 周
   @Cron('0 0 0 * * *', { timeZone: 'Asia/Shanghai' })
   async video() {
     this.logger.log(`开始任务`);
-    const origin = await this.videoOriginModelService.findActive() as TvVideoOrigin;
-    // let url = new URL(`${origin.url}?ac=videolist&pg=1`);
-    const hour = dayjs().diff(origin.crawled_at, 'hour')
-    let url = new URL(`${origin.url}?ac=videolist&pg=1&&t=0&h=${hour}`);
+    const data = await this.supabase.from('origins').select('*').eq('active', true).single();
+    const origin = data.data!;
+    const hour = dayjs().diff(origin?.crawled_at, 'hour');
+    let url = new URL(`${origin?.url}?ac=videolist&pg=1&&t=0&h=${hour}`);
     let page = parseInt(url.searchParams.get('pg') || '1');
     let count = 1;
     for (let i = page; i <= count; i++) {
@@ -41,7 +29,8 @@ export default class TaskService {
         const data: VideoList = await response.json();
         count = data.pagecount;
         for (const item of data.list) {
-          this.videoModelService.findByVodId(origin.id, item.vod_id).then((video) => {
+          this.supabase.from('videos').select('*').eq('origin_id', origin?.id as number).eq('vod_id', item.vod_id).single().then((data) => {
+            const video = data.data;
             if(video) {
               if (video.time != item.vod_time_add) {
                 video.total = item.vod_total;
@@ -49,10 +38,10 @@ export default class TaskService {
                 video.state = item.vod_state;
                 video.isend = item.vod_isend;
                 video.time = item.vod_time_add;
-                this.videoModelService.save(video);
+                this.supabase.from('videos').update(video);
               }
             } else {
-              this.videoModelService.save({
+              this.supabase.from('videos').insert({
                 vod_id: item.vod_id,
                 origin_id: origin.id,
                 type_id: item.type_id,
@@ -74,7 +63,7 @@ export default class TaskService {
                 year: item.vod_year,
                 author: item.vod_author,
                 douban_id: item.vod_douban_id,
-                douban_score: parseInt(item.vod_douban_score) || 0,
+                douban_score: item.vod_douban_score,
                 content: item.vod_content,
                 urls: item.vod_play_url,
                 version: item.vod_version,
@@ -83,17 +72,18 @@ export default class TaskService {
                 time: item.vod_time_add,
               });
             }
-          })
+          });
         }
       } catch(error) {
-        this.videoLogModelService.save({
+        this.supabase.from('errors').insert({
           origin_id: origin.id,
           url: url.toString(),
           error: error.toString(),
+          created_at: new Date().toUTCString(),
         });
       }
     }
-    await this.videoOriginModelService.crawled();
+    this.supabase.from('origins').update({crawled_at: new Date().toUTCString()});
     this.logger.log('完成更新');
     return '更新完成';
   }

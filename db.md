@@ -13,6 +13,17 @@ create table public.origins (
   constraint origins_pkey primary key (id)
 ) TABLESPACE pg_default;
 
+create table public.errors (
+  id serial not null,
+  origin_id smallint not null default 99,
+  url character varying(255) not null default ''::character varying,
+  error text not null default ''::character,
+  created_at timestamp without time zone null default now(),
+  updated_at timestamp without time zone null,
+  deleted_at timestamp without time zone null,
+  constraint errors_pkey primary key (id)
+) TABLESPACE pg_default;
+
 create table public.videos (
   id serial not null,
   vod_id int not null default 0,
