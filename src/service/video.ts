@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { instanceToPlain } from 'class-transformer';
+import { InjectSupabaseClient } from 'nestjs-supabase-js';
+import { SupabaseClient } from '@supabase/supabase-js';
 import VideoOriginModelService from './video_origin.model';
 import VideoModelService from './video.model';
 import { Observable, Subject } from 'rxjs';
@@ -10,6 +12,7 @@ import VideoLogModelService from './video_log.model';
 export default class VideoService {
 
   constructor(
+    @InjectSupabaseClient() private readonly supabase: SupabaseClient,
     private readonly videoOriginModelService: VideoOriginModelService,
     private readonly videoModelService: VideoModelService,
     private readonly videoLogModelService: VideoLogModelService,

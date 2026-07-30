@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
-import {ConfigModule} from '@nestjs/config';
+import {ConfigModule, ConfigService} from '@nestjs/config';
+import { SupabaseModule } from 'nestjs-supabase-js';
 import AuthModule from './module/auth';
 import AppController from './controller/app';
 import AppService from './service/app';
@@ -19,8 +20,14 @@ import VideoService from './service/video';
 @Module({
   imports: [
     ConfigModule.forRoot({isGlobal: true}),
-    MysqlModule,
+    SupabaseModule.forRootAsync({
+      useFactory: (configService: ConfigService) => ({
+        supabaseUrl: configService.getOrThrow<string>('SUPABASE_URL'),
+        supabaseKey: configService.getOrThrow<string>('SUPABASE_KEY'),
+      }),
+    }),
     ScheduleModule.forRoot(),
+    MysqlModule,
     ControllerModule,
     AuthModule,
     ResponseModule,

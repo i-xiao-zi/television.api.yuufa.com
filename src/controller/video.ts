@@ -1,10 +1,8 @@
 import {Controller, Get, Param, Query, Sse} from '@nestjs/common';
-import Json from '../decorator/json';
 import Public from "../decorator/public";
 import "multer";
 import {ApiTags} from "@nestjs/swagger";
 import VideoService from '../service/video';
-import { map } from 'rxjs';
 import TaskService from 'src/service/task';
 
 @ApiTags("Video")
@@ -18,6 +16,12 @@ export default class VideoController {
     return this.videoService.search(video_name, page, size);
   }
 
+  @Get(":id")
+  @Public()
+  video_detail(@Param("id") id: number) {
+    return this.videoService.video_detail(id);
+  }
+
   @Get('origin')
   @Public()
   origin_list() {
@@ -27,12 +31,6 @@ export default class VideoController {
   @Public()
   origin_active() {
     return this.videoService.origin_active();
-  }
-
-  @Get(":id")
-  @Public()
-  video_detail(@Param("id") id: number) {
-    return this.videoService.video_detail(id);
   }
 
 }
