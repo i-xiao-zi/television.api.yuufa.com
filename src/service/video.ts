@@ -22,11 +22,11 @@ export default class VideoService {
   }
   
   async origin_list() {
-    const data = await this.supabase.from('origins').select('*');
+    const data = await this.supabase.from('video_origins').select('*');
     return data;
   }
   async origin_active() {
-    const data = await this.supabase.from('origins').select('*').eq('active', true).single();
+    const data = await this.supabase.from('video_origins').select('*').eq('active', true).single();
     return data.data;
   }
   async video_detail(video_id: number) {

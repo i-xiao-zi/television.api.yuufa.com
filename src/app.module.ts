@@ -1,13 +1,10 @@
 import { Module } from '@nestjs/common';
 import {ConfigModule, ConfigService} from '@nestjs/config';
 import { SupabaseModule } from 'nestjs-supabase-js';
-import AuthModule from './module/auth';
 import AppController from './controller/app';
 import AppService from './service/app';
-import MysqlModule from "./module/mysql";
 import ResponseModule from "./module/response";
 import TaskController from "./controller/task";
-import AuthService from "./service/auth";
 import TvController from "./controller/tv";
 import TvService from './service/tv';
 import KekeTvTvService from "./service/keke.tv";
@@ -29,9 +26,7 @@ import VideoService from './service/video';
     }),
     SupabaseModule.injectClient(),
     ScheduleModule.forRoot(),
-    MysqlModule,
     ControllerModule,
-    AuthModule,
     ResponseModule,
   ],
   controllers: [
@@ -46,7 +41,6 @@ import VideoService from './service/video';
     TvService,
     VideoService,
     KekeTvTvService,
-    AuthService,
   ],
 })
 export class AppModule {}

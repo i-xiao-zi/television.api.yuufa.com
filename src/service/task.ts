@@ -15,7 +15,7 @@ export default class TaskService {
   @Cron('0 0 0 * * *', { timeZone: 'Asia/Shanghai' })
   async video() {
     this.logger.log(`开始任务`);
-    const data = await this.supabase.from('origins').select('*').eq('active', true).single();
+    const data = await this.supabase.from('video_origins').select('*').eq('active', true).single();
     const origin = data.data!;
     const hour = dayjs().diff(origin?.crawled_at, 'hour');
     let url = new URL(`${origin?.url}?ac=videolist&pg=1&&t=0&h=${hour}`);
@@ -75,7 +75,7 @@ export default class TaskService {
           });
         }
       } catch(error) {
-        this.supabase.from('errors').insert({
+        this.supabase.from('video_errors').insert({
           origin_id: origin.id,
           url: url.toString(),
           error: error.toString(),
@@ -83,7 +83,7 @@ export default class TaskService {
         });
       }
     }
-    this.supabase.from('origins').update({crawled_at: new Date().toUTCString()});
+    this.supabase.from('video_origins').update({crawled_at: new Date().toUTCString()});
     this.logger.log('完成更新');
     return '更新完成';
   }

@@ -1,25 +1,13 @@
 import {Injectable} from '@nestjs/common';
-import {instanceToPlain} from "class-transformer";
 import dayjs from "dayjs";
 import crypto from 'node:crypto';
-import TvChannelModelService from './tv_channel.model';
 import KekeTvTvService from "./keke.tv";
-import VideoOriginModelService from './video_origin.model';
-import {VideoList, VideoDetail} from './tv.types';
-import VideoModelService from './video.model';
-import Video from '../entity/video';
-import { DeepPartial } from 'typeorm';
-import VideoUrlModelService from "./video_url.model";
 
 @Injectable()
 export default class TvService {
 
   constructor(
-    private readonly tvChannelModelService: TvChannelModelService, 
     private readonly kekeTvService: KekeTvTvService, 
-    private readonly videoOriginModelService: VideoOriginModelService,
-    private readonly videoModelService: VideoModelService,
-    private readonly videoUrlModelService: VideoUrlModelService,
   ) {}
   // //https://cmsres.dianzhenkeji.com/anonymous/2022/11/1/XRTVCgCFAA_700_700.png
   async henan() {
