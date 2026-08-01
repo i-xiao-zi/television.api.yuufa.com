@@ -11,7 +11,7 @@ export default class VideoService {
   ) {}
 
   async search(video_name?: string, page: number = 1, size: number = 10) {
-    const data = await this.supabase.from('videos').select('*', {count: 'exact'}).range((page-1)*size, page * size-1);
+    const data = await this.supabase.from('videos_3' as 'videos').select('*', {count: 'exact'}).range((page-1)*size, page * size-1);
     return {
       data: data.data,
       count: data.count,
@@ -30,7 +30,7 @@ export default class VideoService {
     return data.data;
   }
   async video_detail(video_id: number) {
-    const data = await this.supabase.from('videos').select('*').eq('id', video_id).single();
+    const data = await this.supabase.from('videos_3' as 'videos').select('*').eq('id', video_id).single();
     return data.data;
   }
 }
